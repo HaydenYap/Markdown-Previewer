@@ -1,4 +1,5 @@
 <div id="app"></div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>
@@ -13,20 +14,27 @@
           previewMaximized: false
         }
         // this bindings
+        this.handleEdit = this.handleEdit.bind(this);
       };
       handleEdit(event){
-
+          this.setState({input:event.target.value})
       }
 
       render() {
           return (
             <div>
-              <textarea id="editor" placeholder="enter text here"></textarea>
-              <div id="preview"></div>
+              <textarea id="editor" placeholder="enter text here" onChange={this.handleEdit}></textarea>
+              <Preview input={this.state.input}/>
             </div>
           );
       };
   };
+
+  const Preview =(props) =>{
+    return (
+      <div id="preview" dangerouslySetInnerHTML={{__html: marked(props.input)}} />
+    );
+  }
 
   ReactDOM.render(
       <App />,
