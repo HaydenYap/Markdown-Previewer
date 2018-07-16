@@ -1,3 +1,7 @@
+<head>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
 <div id="app"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js"></script>
@@ -5,26 +9,44 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.4.0/marked.js"></script>
 <script type="text/babel">
+  const defaultText =
+  "# This is a H1 size heading\n## This is a H2 size heading\n### This is a H3 size heading\nThis is a link to the marked [gitHub](https://github.com/markedjs/marked.git)\n\nInline code `<div></div>`\n\n```\nfunction blockCode(){\n \treturn true;\n}```\n\n- List of items\n\t- item 1\n\t\t- item 2\n\t\t\t- item 3\n\n> Block Quotes are a thing as well\n\n![cat image](https://i.pinimg.com/736x/80/92/0e/80920e478c21f79e90923659d7b1f950--funny-cats-funny-animals.jpg)\n\nHow **BOLD** are you?"
   class App extends React.Component {
       constructor(props){
         super(props);
         this.state={
-          input:'',
+          input: defaultText,
           editMaximized: false,
           previewMaximized: false
         }
         // this bindings
         this.handleEdit = this.handleEdit.bind(this);
+        this.handleReset = this.handleReset.bind(this);
       };
       handleEdit(event){
-          this.setState({input:event.target.value})
+        this.setState({input:event.target.value})
+      }
+      handleReset(){
+        this.setState({input: defaultText});
+        document.getElementById('editor').value= defaultText;
       }
 
       render() {
           return (
-            <div>
-              <textarea id="editor" placeholder="enter text here" onChange={this.handleEdit}></textarea>
-              <Preview input={this.state.input}/>
+            <div id="page">
+              <div id="toolbar">
+                <button onClick={this.handleReset}>Reset</button>
+              </div>
+              <div id="content">
+                <div id="editWindow" className="window">
+                  <div className="titlebar">Editor</div>
+                  <textarea id="editor" className="textBox" onChange={this.handleEdit}>{this.state.input}</textarea>
+                </div>
+                <div id="markdownWindow" className="window">
+                <div className="titlebar">Markdown Preview</div>
+                  <Preview input={this.state.input}/>
+                </div>
+              </div>
             </div>
           );
       };
@@ -32,7 +54,7 @@
 
   const Preview =(props) =>{
     return (
-      <div id="preview" dangerouslySetInnerHTML={{__html: marked(props.input)}} />
+      <div id="preview" className="textBox" dangerouslySetInnerHTML={{__html: marked(props.input)}} />
     );
   }
 
